@@ -141,11 +141,15 @@ def main():
             while waiting:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        run = False
+                        break
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         break
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                         waiting = False
                         projectile_count = 0
+                        projectile_add_interval = 2000
+                        projectiles.clear()
+                        elapsed_time = 0
                         hit = False
                         break
             # if pygame.key.get_pressed()[pygame.K_SPACE]:
