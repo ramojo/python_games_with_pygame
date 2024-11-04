@@ -25,8 +25,16 @@ end_time = time.time() - start_time
 
 FONT = pygame.font.SysFont("roboto", 30)
 
+projectile_add_interval = 2000  # 2 seconds in milliseconds
+projectile_count = 0  # Counter for when to add a projectile
 
-def draw(player, elapsed_time):
+projectiles = []
+
+PROJECTILE_WIDTH = 10
+PROJECTILE_HEIGHT = 10
+
+
+def draw(player, elapsed_time, projectiles):
     WINDOW.blit(BACKGROUND, (0, 0))  # Draw background
 
     elapsed_time_text = FONT.render(
@@ -48,8 +56,26 @@ def main():
     )  # Centers the player and lifts it slightly from the bottom
 
     while run:  # Game loop
-        clock.tick(60)  # Sets the FPS to 60
+        # This is keeping count of how the number of milliseconds in 1 second (1 tick)
+        projectiles_count = clock.tick(60)  # Sets the FPS to 60.
         elapsed_time = time.time() - start_time
+
+        if projectiles_count > projectile_add_interval:
+            for _ in range(random.randint(1, 3)):
+                projectile_x = random.randint(
+                    0, WIDTH - PROJECTILE_WIDTH
+                )  # Random x position for projectile
+                projectile = pygame.Rect(
+                    projectile_x,
+                    -PROJECTILE_HEIGHT,
+                    PROJECTILE_WIDTH,
+                    PROJECTILE_HEIGHT,
+                )  # Creates a projectile
+                projectiles.append(projectile)
+
+            projectile_add_interval = max(200, projectile_add_interval - 50)
+            projectiles_count = 0
+
         # Event handling MUST be inside the loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -61,7 +87,7 @@ def main():
             player.x -= PLAYER_VELOCITY
         if keys[pygame.K_RIGHT] and player.x + PLAYER_VELOCITY <= WIDTH - PLAYER_WIDTH:
             player.x += PLAYER_VELOCITY
-        draw(player, elapsed_time)
+        draw(player, elapsed_time, projectiles)
     pygame.quit()
 
 
