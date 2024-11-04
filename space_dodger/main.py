@@ -42,9 +42,9 @@ def main():
                 break
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and player.x - PLAYER_VELOCITY >= 0:
             player.x -= PLAYER_VELOCITY
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] and player.x + PLAYER_VELOCITY <= WIDTH - PLAYER_WIDTH:
             player.x += PLAYER_VELOCITY
         draw(player)
     pygame.quit()
