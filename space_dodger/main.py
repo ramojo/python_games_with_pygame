@@ -60,6 +60,7 @@ def draw(player, elapsed_time, projectiles):
 
 
 def main():
+    global hit
     run = True
     projectile_add_interval = 2000  # 2 seconds in milliseconds
     projectile_count = 0
@@ -124,7 +125,9 @@ def main():
                 break
 
         if hit:
-            lose_text = FONT.render("You Lose TEKO!", True, "white")
+            lose_text = FONT.render(
+                "You Lose TEKO! Press SPACE to restart", True, "white"
+            )
             WINDOW.blit(
                 lose_text,
                 (
@@ -133,12 +136,22 @@ def main():
                 ),
             )
             pygame.display.update()
-            pygame.time.delay(4000)  # 4 seconds in milliseconds
-
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
-                run = True
-            else:
-                break
+            # pygame.time.delay(4000)  # 4 seconds in milliseconds
+            waiting = True
+            while waiting:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        run = False
+                        break
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        waiting = False
+                        projectile_count = 0
+                        hit = False
+                        break
+            # if pygame.key.get_pressed()[pygame.K_SPACE]:
+            #     run = True
+            # else:
+            #     break
         draw(player, elapsed_time, projectiles)
     pygame.quit()
 
