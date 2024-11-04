@@ -2,6 +2,8 @@ import pygame
 import random
 import time
 
+pygame.font.init()
+
 WIDTH, HEIGHT = 1300, 600
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -14,11 +16,23 @@ BACKGROUND = pygame.transform.scale(
 PLAYER_HEIGHT = 60
 PLAYER_WIDTH = 40
 PLAYER_VELOCITY = 5
+
 clock = pygame.time.Clock()
 
+start_time = time.time()
+elapsed_time = 0
+end_time = time.time() - start_time
 
-def draw(player):
+FONT = pygame.font.SysFont("roboto", 30)
+
+
+def draw(player, elapsed_time):
     WINDOW.blit(BACKGROUND, (0, 0))  # Draw background
+
+    elapsed_time_text = FONT.render(
+        f"Elapsed Time: {round(elapsed_time)}s", True, "white"
+    )
+    WINDOW.blit(elapsed_time_text, (10, 10))
 
     pygame.draw.rect(WINDOW, "red", player)
     pygame.display.update()  # Update the display
@@ -35,6 +49,7 @@ def main():
 
     while run:  # Game loop
         clock.tick(60)  # Sets the FPS to 60
+        elapsed_time = time.time() - start_time
         # Event handling MUST be inside the loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,7 +61,7 @@ def main():
             player.x -= PLAYER_VELOCITY
         if keys[pygame.K_RIGHT] and player.x + PLAYER_VELOCITY <= WIDTH - PLAYER_WIDTH:
             player.x += PLAYER_VELOCITY
-        draw(player)
+        draw(player, elapsed_time)
     pygame.quit()
 
 
