@@ -32,6 +32,9 @@ projectiles = []
 
 PROJECTILE_WIDTH = 10
 PROJECTILE_HEIGHT = 10
+PROJECTILE_VELOCITY = 10
+
+hit = False
 
 
 def draw(player, elapsed_time, projectiles):
@@ -82,11 +85,29 @@ def main():
                 run = False
                 break
 
+        # Player movement
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] and player.x - PLAYER_VELOCITY >= 0:
             player.x -= PLAYER_VELOCITY
         if keys[pygame.K_RIGHT] and player.x + PLAYER_VELOCITY <= WIDTH - PLAYER_WIDTH:
             player.x += PLAYER_VELOCITY
+
+        # Projectile movement
+        for projectile in projectiles[:]:
+            projectile.y += PROJECTILE_VELOCITY
+
+            if projectile.y > HEIGHT:
+                projectiles.remove(projectile)
+
+            # Collision detection
+            elif (
+                projectile.y + projectile.height >= player.y
+                and projectile.colliderect(player)
+            ):
+                projectiles.remove(projectile)
+                hit = True
+                break
+
         draw(player, elapsed_time, projectiles)
     pygame.quit()
 
